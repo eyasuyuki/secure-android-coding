@@ -1,4 +1,4 @@
-package com.example.basic;
+package com.example.basic.server;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
