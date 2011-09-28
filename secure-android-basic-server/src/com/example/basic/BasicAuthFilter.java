@@ -39,10 +39,6 @@ public class BasicAuthFilter implements Filter {
 		}
 		logger.severe("pair[1]="+pair[1]);
 		String decoded= new String(Base64.decodeBase64(pair[1].getBytes()));
-//		int pos = decoded.lastIndexOf(":");
-//		String[] userPass = new String[2];
-//		userPass[0] = decoded.substring(0, pos);
-//		userPass[1] = decoded.substring(pos+1, decoded.length());
 		String[] userPass = decoded.split(":");
 		logger.severe("userPass[0]="+userPass[0]+", userPass[1]="+userPass[1]);
 		Set<String> keys = userMap.keySet();
