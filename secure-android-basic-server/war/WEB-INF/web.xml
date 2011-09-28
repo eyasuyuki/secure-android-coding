@@ -18,7 +18,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<filter>
   	<filter-name>BasicAuth</filter-name>
-  	<filter-class>com.example.basic.server.BasicAuthFilter</filter-class>
+  	<filter-class>com.example.basic.BasicAuthFilter</filter-class>
   	<init-param>
   		<param-name>realm</param-name>
   		<param-value>Secure Android Basic Authentication Example</param-value>
