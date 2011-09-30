@@ -2,11 +2,6 @@
 	<head>
 	</head>
 	<body>
-	$names
-	<table><tbody><tr><th>key</th><th>value</th></tr>
-	#foreach ($item in $names)
-	<tr><td>$item</td><td>$req.getParameters($item)</td></tr>
-	#end
-	</table>
+	login as: <b id="user">$user</b>.
 	</body>
 </html>
