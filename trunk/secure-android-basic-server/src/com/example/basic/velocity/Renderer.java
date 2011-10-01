@@ -1,3 +1,10 @@
+/*
+ * 下記を参考にしました:
+ * 中田 秀基「すっきりわかるGoogle App Engine for Javaクラウドプログラミング」
+ * ISBN978-4-7973-5760-8
+ * p.446-447
+ */
+
 package com.example.basic.velocity;
 
 import java.io.IOException;
@@ -9,8 +16,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.log.JdkLogChute;
-
-import com.google.appengine.api.datastore.KeyFactory;
 
 public class Renderer {
 	static Logger logger = Logger.getAnonymousLogger();
@@ -33,7 +38,6 @@ public class Renderer {
 				}
 			}
 			context.put("_datetimeFormat", dateTimeFormat);
-			context.put("_keyFactory", KeyFactory.class);
 			Template template = Velocity.getTemplate(filename);
 			template.merge(context, writer);
 		} catch (Exception e) {
