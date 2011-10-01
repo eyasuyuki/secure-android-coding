@@ -1,22 +1,23 @@
 package com.example.basic.client;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +48,6 @@ public class Main extends Activity {
     }
     
     final class LoginListener implements View.OnClickListener {
-
 		@Override
 		public void onClick(View v) {
 			messageText.setText(null);
@@ -89,41 +89,47 @@ public class Main extends Activity {
 
     /*
      * 下記を参考にしました:
-     * Androidでorg.apache.http.clientを使用する
-     * http://www.android-group.jp/index.php?%CA%D9%B6%AF%B2%F1%2FHttpClient
+     * HttpClient Tutorial - Chapter 4. HTTP authentication
+     * http://hc.apache.org/httpcomponents-client-ga/tutorial/html/authentication.html
      */
     HttpEntity login(String uriString, String user, String password) {
+    	final int RETRY_MAX = 2;
+    	
+		URI uri = URI.create(uriString);
+    	HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()); 
 		DefaultHttpClient client = new DefaultHttpClient();
 
+		// set username-password credentials
 		if (user != null && user.length() > 0) {
-			URI uri = URI.create(uriString);
 			client.getCredentialsProvider().setCredentials(
 					new AuthScope(uri.getHost(), uri.getPort()),
 					new UsernamePasswordCredentials(user, password));
 		}
 
-		HttpGet method = new HttpGet(uriString);
+		HttpContext context = new BasicHttpContext();
+		HttpGet get = new HttpGet(uriString);
 
 		HttpResponse response = null;
 
 		try {
-			response = client.execute(method);
-			int statusCode = response.getStatusLine().getStatusCode();
-
-			if (statusCode == HttpStatus.SC_OK
-					| statusCode == HttpStatus.SC_CREATED) {
-				return response.getEntity();
-			} else {
-				throw new HttpResponseException(statusCode, "Response code is "
-						+ Integer.toString(statusCode));
+			int code = HttpStatus.SC_UNAUTHORIZED;
+			for (int i=0; i<RETRY_MAX; i++) {
+				response = client.execute(host, get, context);
+				code = response.getStatusLine().getStatusCode();
+				if (code == HttpStatus.SC_OK
+						| code == HttpStatus.SC_CREATED) {
+					return response.getEntity();
+				}
 			}
+			// fail
+			throw new HttpResponseException(code, "Response code is "
+					+ Integer.toString(code));
 		} catch (Exception e) {
 			e.printStackTrace();
-			if (method != null) {
-				method.abort();
+			if (get != null) {
+				get.abort();
 			}
 			throw new RuntimeException(e);
 		}
-		//return null;
 	}
 }
