@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <!-- uri -->
+	<TextView
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/server_uri_label"
+	    />
+	<EditText android:id="@+id/uri_edit"   
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/server_uri_default"
+	    />
+    <!-- user -->
+	<TextView
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/user_label"
+	    />
+	<EditText android:id="@+id/user_edit"   
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/user_default"
+	    />
+    <!-- password -->
+	<TextView
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/password_label"
+	    />
+	<EditText android:id="@+id/password_edit"
+		android:password="true"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    />
+    <!-- login -->
+	<Button android:id="@+id/login_button"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/login_button_label"
+		/>
+    <!-- page content -->
+	<TextView
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/message_label"
+	    />
+	<TextView android:id="@+id/message_text"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    />
+</LinearLayout>
