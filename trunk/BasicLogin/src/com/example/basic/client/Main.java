@@ -117,7 +117,7 @@ public class Main extends Activity {
 				response = client.execute(host, get, context);
 				code = response.getStatusLine().getStatusCode();
 				if (code == HttpStatus.SC_OK
-						| code == HttpStatus.SC_CREATED) {
+					|| code == HttpStatus.SC_CREATED) {
 					return response.getEntity();
 				}
 			}
