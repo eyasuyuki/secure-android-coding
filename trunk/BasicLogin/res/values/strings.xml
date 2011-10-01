@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BasicLogin</string>
+    <string name="server_uri_label">Uri:</string>
+    <string name="server_uri_default">https://secure-android-basic-server.appspot.com/secure_android_basic_server</string>
+    <string name="user_label">User:</string>
+    <string name="user_default">user0001</string>
+    <string name="password_label">Password:</string>
+    <string name="message_label">Page content:</string>
+    <string name="login_button_label">Login</string>
+</resources>
