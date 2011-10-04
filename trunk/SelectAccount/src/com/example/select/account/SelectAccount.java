@@ -50,7 +50,10 @@ public class SelectAccount extends ListActivity {
 		}
 		
 		ArrayAdapter<String> adapter =
-			new ArrayAdapter<String>(this,android.R.layout.simple_list_item_single_choice,names);
+			new ArrayAdapter<String>(
+					this,
+					android.R.layout.simple_list_item_single_choice,
+					names);
         setListAdapter(adapter);
     }
     
@@ -66,7 +69,9 @@ public class SelectAccount extends ListActivity {
     @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-    	if (accounts != null && accounts.length > 0 && accounts.length >= position) {
+    	if (accounts != null
+    		&& accounts.length > 0
+    		&& accounts.length >= position) {
     		Account account = accounts[position];
     		saveToPreference(account.name);
     		finish();
