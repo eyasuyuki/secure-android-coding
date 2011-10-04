@@ -19,17 +19,16 @@
 <option value="Dinner">Dinner</option>
 </select>
 <b>Food:</b><input type="text" name="food" />
-<b>Calorie:</b><input type="number" min="0" name="kkal" />KCal&nbsp;
+<b>Calorie:</b><input type="number" min="0" name="kcal" />KCal&nbsp;
 <b>Salt:</b><input type="number" step="0.0001" name="salt" />g&nbsp;
 <input type="submit" value="Add"/>
 </div>
 </form>
 <table>
 <tbody>
-<tr><th>User</th><th>Log Date</th><th>Time</th><th>Food</th><th>Kcal</th><th>Salt</th></tr>
+<tr><th>Log Date</th><th>Time</th><th>Food</th><th>Kcal</th><th>Salt</th></tr>
 <c:forEach var="e" items="${foodLogList}">
 <tr>
-<td>${f:h(e.user)}</td>
 <td>${f:h(e.logDate)}</td>
 <td>${f:h(e.time)}</td>
 <td>${f:h(e.food)}</td>
