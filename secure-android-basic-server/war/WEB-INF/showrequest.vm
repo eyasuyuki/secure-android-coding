@@ -2,6 +2,6 @@
 	<head>
 	</head>
 	<body>
-	login as: <b id="user">$user</b>.
+	login as: <b id="user">$esc.html($user)</b>.
 	</body>
 </html>
