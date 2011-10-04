@@ -2,7 +2,9 @@ package com.example.select.account;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -25,14 +27,32 @@ public class SelectAccount extends ListActivity {
 		accounts = am.getAccountsByType("com.google");
 		if (accounts == null || accounts.length <= 0) {
 			// add account
-			Intent intent =
-				new Intent("android.settings.ADD_ACCOUNT_SETTINGS");
-			intent.putExtra(
-					AUTHORITIES_FILTER_KEY,
-					new String[]{ ContactsContract.AUTHORITY });
-			startActivity(intent);
-			// exit
-			finish();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.create_account_prompt);
+			builder.setPositiveButton(
+					R.string.yes_label,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Intent intent =
+								new Intent("android.settings.ADD_ACCOUNT_SETTINGS");
+							intent.putExtra(
+									AUTHORITIES_FILTER_KEY,
+									new String[]{ ContactsContract.AUTHORITY });
+							startActivity(intent);
+							// exit
+							SelectAccount.this.finish();
+						}
+			});
+			builder.setNegativeButton(
+					R.string.cancel_label,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							SelectAccount.this.finish();
+						}
+				});
+			builder.create().show();
 		}
 
         // single account
