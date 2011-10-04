@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, SelectAccount!</string>
+    <string name="app_name">SelectAccount</string>
+    <!-- preference key -->
+    <string name="default_account_key">default_account</string>
+</resources>
