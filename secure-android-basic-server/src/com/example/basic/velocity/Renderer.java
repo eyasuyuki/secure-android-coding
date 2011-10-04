@@ -16,6 +16,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.log.JdkLogChute;
+import org.apache.velocity.tools.generic.EscapeTool;
 
 public class Renderer {
 	static Logger logger = Logger.getAnonymousLogger();
@@ -38,6 +39,7 @@ public class Renderer {
 				}
 			}
 			context.put("_datetimeFormat", dateTimeFormat);
+			context.put("esc", new EscapeTool());
 			Template template = Velocity.getTemplate(filename);
 			template.merge(context, writer);
 		} catch (Exception e) {
