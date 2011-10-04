@@ -9,14 +9,23 @@ import org.slim3.util.BeanUtil;
 import com.example.nutrimancer.meta.FoodLogMeta;
 import com.example.nutrimancer.model.FoodLog;
 import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class EntryService {
     
     FoodLogMeta t = new FoodLogMeta();
     
     public FoodLog entry(Map<String, Object> input) {
+        UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+        
         FoodLog foodLog = new FoodLog();
         BeanUtil.copy(input, foodLog);
+        if (user != null) {
+            foodLog.setUser(user.getUserId());
+        }
         Transaction tx = Datastore.beginTransaction();
         Datastore.put(foodLog);
         tx.commit();
@@ -24,7 +33,15 @@ public class EntryService {
     }
     
     public List<FoodLog> getFoodLogList() {
-        return Datastore.query(t).sort(t.createDate.desc).asList();
-    }
+        List<FoodLog> result = null;
 
+        UserService userService = UserServiceFactory.getUserService();
+        User user = userService.getCurrentUser();
+
+        if (user != null) {
+            result =
+                Datastore.query(t).filter(t.user.equal(user.getUserId())).sort(t.createDate.desc).asList();
+        }
+        return result;
+    }
 }
