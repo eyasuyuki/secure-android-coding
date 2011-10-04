@@ -72,11 +72,15 @@ public class BasicAuthFilter implements Filter {
 		if (pair.length != 2) {
 			return false;
 		}
-		String decoded= new String(Base64.decodeBase64(pair[1].getBytes()));
+		String decoded = new String(Base64.decodeBase64(pair[1].getBytes()));
 		String[] userPass = decoded.split(":");
 		byte[] pass = null;
 		try {
-			pass = Hex.decodeHex(userMap.get(userPass[0]).toCharArray());
+			String ps = userMap.get(userPass[0]);
+			logger.severe("tryAuth: ps="+ps);
+			if (ps != null) {
+				pass = Hex.decodeHex(ps.toCharArray());
+			}
 		} catch (Exception e) {
  			e.printStackTrace();
 		}
@@ -144,6 +148,7 @@ public class BasicAuthFilter implements Filter {
 			for (Object o: passProp.keySet()) {
 				String user = (String)o;
 				String pass = passProp.getProperty(user).trim();
+				logger.severe("init: user="+user+", pass="+pass);
 				userMap.put(user, pass);
 			}
 		} catch (FileNotFoundException e) {
