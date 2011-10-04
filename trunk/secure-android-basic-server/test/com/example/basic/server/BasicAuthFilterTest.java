@@ -11,7 +11,8 @@ import org.apache.commons.lang.ArrayUtils;
 
 public class BasicAuthFilterTest extends TestCase {
 	private static final String TEST = "TEST";
-	private static final String USER = "user0001";
+	private static final String USER_1 = "user0001";
+	private static final String USER_2 = "<script>alert('hello')</script>";
 	private static final String PASSWORD = "test0001";
 	
 	public void testDigest() throws NoSuchAlgorithmException {
@@ -31,7 +32,7 @@ public class BasicAuthFilterTest extends TestCase {
 	}
 	
 	public void testGetPasswordHash() throws DecoderException {
-		byte[] hash1 = BasicAuthFilter.getPasswordHash(USER, PASSWORD);
+		byte[] hash1 = BasicAuthFilter.getPasswordHash(USER_1, PASSWORD);
 		assertNotNull(hash1);
 		String hex1 = Hex.encodeHexString(hash1);
 		System.out.println(hex1);
@@ -39,9 +40,15 @@ public class BasicAuthFilterTest extends TestCase {
 		assertNotNull(byte1);
 		assertTrue(ArrayUtils.isEquals(hash1, byte1));
 		
-		byte[] hash2 =BasicAuthFilter.getPasswordHash(USER, PASSWORD);
+		byte[] hash2 = BasicAuthFilter.getPasswordHash(USER_2, PASSWORD);
 		assertNotNull(hash2);
-		System.out.println(Hex.encodeHexString(hash2));
-		assertTrue(ArrayUtils.isEquals(hash1, hash2));
+		String hex2 = Hex.encodeHexString(hash2);
+		System.out.println(hex2);
+		assertFalse(ArrayUtils.isEquals(hash1, hash2));
+		
+		byte[] hash3 = BasicAuthFilter.getPasswordHash(USER_1, PASSWORD);
+		assertNotNull(hash3);
+		System.out.println(Hex.encodeHexString(hash3));
+		assertTrue(ArrayUtils.isEquals(hash1, hash3));
 	}
 }
