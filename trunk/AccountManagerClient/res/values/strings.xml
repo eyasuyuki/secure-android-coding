@@ -7,4 +7,10 @@
     <string name="fetch_uri">https://nutrimancer.appspot.com/json</string>
     <!-- preference key -->
     <string name="default_account_key">default_account</string>
+    <!-- menu -->
+    <string name="menu_select_account_label">Select Account</string>
+    <!-- dialog -->
+    <string name="create_account_prompt">Create account?</string>
+    <string name="yes_label">Yes</string>
+    <string name="cancel_label">Cancel</string>
 </resources>
