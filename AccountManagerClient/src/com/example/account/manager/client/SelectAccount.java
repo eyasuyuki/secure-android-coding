@@ -26,33 +26,7 @@ public class SelectAccount extends ListActivity {
 
 		accounts = am.getAccountsByType("com.google");
 		if (accounts == null || accounts.length <= 0) {
-			// add account
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.create_account_prompt);
-			builder.setPositiveButton(
-					R.string.yes_label,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							Intent intent =
-								new Intent("android.settings.ADD_ACCOUNT_SETTINGS");
-							intent.putExtra(
-									AUTHORITIES_FILTER_KEY,
-									new String[]{ ContactsContract.AUTHORITY });
-							startActivity(intent);
-							// exit
-							SelectAccount.this.finish();
-						}
-			});
-			builder.setNegativeButton(
-					R.string.cancel_label,
-					new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							SelectAccount.this.finish();
-						}
-				});
-			builder.create().show();
+			addAccount();
 		}
 
         // single account
@@ -75,6 +49,50 @@ public class SelectAccount extends ListActivity {
 					android.R.layout.simple_list_item_single_choice,
 					names);
         setListAdapter(adapter);
+
+        // set checkd
+		SharedPreferences sp =
+			PreferenceManager.getDefaultSharedPreferences(this);
+		String key = getString(R.string.default_account_key);
+		String ac = sp.getString(key, null);
+		if (ac != null) {
+	        for (int i=0; i<names.length; i++) {
+	        	if (ac.equals(names[i])) {
+	        		listView.setItemChecked(i, true);
+	        		break;
+	        	}
+	        }
+		}
+    }
+    
+    void addAccount() {
+		// add account
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.create_account_prompt);
+		builder.setPositiveButton(
+				R.string.yes_label,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Intent intent =
+							new Intent("android.settings.ADD_ACCOUNT_SETTINGS");
+						intent.putExtra(
+								AUTHORITIES_FILTER_KEY,
+								new String[]{ ContactsContract.AUTHORITY });
+						startActivity(intent);
+						// exit
+						SelectAccount.this.finish();
+					}
+		});
+		builder.setNegativeButton(
+				R.string.cancel_label,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SelectAccount.this.finish();
+					}
+			});
+		builder.create().show();
     }
     
     void saveToPreference(String name) {
