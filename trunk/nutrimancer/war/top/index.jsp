@@ -9,6 +9,7 @@
 <title>top Index</title>
 </head>
 <body>
+<div>Login As: <a href=${logoutUrl} title="Logout">${email}</a></div>
 <p>What do you eat?</p>
 <form method="post" action="entry">
 <div>
