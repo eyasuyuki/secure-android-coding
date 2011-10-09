@@ -14,10 +14,10 @@ public class Main extends Activity {
         setContentView(R.layout.main);
  
         AccountManager am = AccountManager.get(this);
-        am.getAccounts();
+        Account[] accounts = am.getAccounts();
         StringBuffer buf = new StringBuffer();
         buf.append("Accounts:\n");
-        for (Account a: am.getAccounts()) {
+        for (Account a: accounts) {
         	buf.append(a.name);
         	buf.append("\n");
         }
