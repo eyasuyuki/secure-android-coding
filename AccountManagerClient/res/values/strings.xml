@@ -4,13 +4,41 @@
     <string name="app_name">AccountManagerClient</string>
     <!-- uri -->
     <string name="post_uri">https://nutrimancer.appspot.com/top/entry</string>
-    <string name="fetch_uri">https://nutrimancer.appspot.com/json</string>
+    <string name="login_uri">https://nutrimancer.appspot.com/_ah/login\?continue=https://nutrimancer.appspot.com/json/&amp;auth=</string>
+    <string name="json_uri">https://nutrimancer.appspot.com/json/</string>
     <!-- preference key -->
     <string name="default_account_key">default_account</string>
     <!-- menu -->
+    <string name="menu_add_food_log_label">Add Food Log</string>
     <string name="menu_select_account_label">Select Account</string>
     <!-- dialog -->
     <string name="create_account_prompt">Create account?</string>
     <string name="yes_label">Yes</string>
     <string name="cancel_label">Cancel</string>
+    <!-- progress dialog -->
+    <string name="progress_title">Update...</string>
+    <!-- invalidate token -->
+    <string name="invalidate_token_message">Bad token. Login failed.</string>
+    <!-- food log list -->
+    <string name="food_log_empty_message">Empty</string>
+    <!-- food log row -->
+    <string name="log_date_label">Date:</string>
+    <string name="time_label">Time:</string>
+    <string name="kcal_label">Calorie:</string>
+    <string name="kcal_unit_label">KCal</string>
+    <string name="salt_label">Salt:</string>
+    <string name="salt_unit_label">g</string>
+    <!-- add food log activity -->
+    <string name="breakfast_label">Breakfast</string>
+    <string name="lunch_label">Lunch</string>
+    <string name="dinner_label">Dinner</string>
+    <!-- input activity -->
+    <string name="food_label">Food:</string>
+    <string name="post_button_label">Add Food Log</string>
+    <string name="post_title">Post to serer...</string>
+    <!-- provider -->
+    <string name="food_log_provider">com.example.account.manager.client.provider.FoodLogProvider</string>
+    <!-- permission name -->
+    <string name="read_permission">com.example.account.manager.client.permission.READ_FOOD_LOG</string>
+    <string name="write_permission">com.example.account.manager.client.permission.WRITE_FOOD_LOG</string>
 </resources>
