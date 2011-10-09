@@ -79,15 +79,15 @@ public class Main extends ListActivity {
 							Main.this,
 							client,
 							authToken,
-							Main.this.getListView(),
+							getListView(),
 							dialog);
 				AsyncCookie async =
 					new AsyncCookie(
 							Main.this,
+							//handler,
 							dialog,
 							client,
 							authToken,
-							getListView(),
 							new InvalidateTokenListener(),
 							update);
 				async.execute();
@@ -158,6 +158,32 @@ public class Main extends ListActivity {
     	}
     	Log.d(TAG, "onCreate: authToken="+authToken);
     }
+    
+	@Override
+	protected void onResume() {
+		super.onRestart();
+		if (authToken != null) {
+			client = new DefaultHttpClient();
+			ProgressDialog dialog = new ProgressDialog(Main.this);
+			AsyncUpdate update =
+				new AsyncUpdate(
+						this,
+						client,
+						authToken,
+						getListView(),
+						dialog);
+			AsyncCookie async =
+				new AsyncCookie(
+						this,
+						//handler,
+						dialog,
+						client,
+						authToken,
+						new InvalidateTokenListener(),
+						update);
+			async.execute();
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
