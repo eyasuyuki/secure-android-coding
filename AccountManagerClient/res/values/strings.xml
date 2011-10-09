@@ -35,7 +35,7 @@
     <!-- input activity -->
     <string name="food_label">Food:</string>
     <string name="post_button_label">Add Food Log</string>
-    <string name="post_title">Post to serer...</string>
+    <string name="post_title">Post to server...</string>
     <!-- provider -->
     <string name="food_log_provider">com.example.account.manager.client.provider.FoodLogProvider</string>
     <!-- permission name -->
