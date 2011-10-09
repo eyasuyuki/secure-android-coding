@@ -4,12 +4,21 @@
       android:versionCode="1"
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="10" />
+    <permission android:name="com.example.account.manager.client.permission.READ_FOOD_LOG"
+    	android:protectionLevel="signature" />
+    <permission android:name="com.example.account.manager.client.permission.WRITE_FOOD_LOG"
+    	android:protectionLevel="signature" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.example.account.manager.client.permission.READ_FOOD_LOG" />
+    <uses-permission android:name="com.example.account.manager.client.permission.WRITE_FOOD_LOG" />
 
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
-		<provider android:name=".provider.FoodLogProvider" android:authorities="com.example.account.manager.client.provider.FoodLogProvider" />
+		<provider android:name=".provider.FoodLogProvider"
+			android:authorities="@string/food_log_provider"
+			android:readPermission="com.example.account.manager.client.permission.READ_FOOD_LOG"
+			android:writePermission="com.example.account.manager.client.permission.WRITE_FOOD_LOG" android:exported="false"/>
         <activity android:name=".Main"
                   android:label="@string/app_name">
             <intent-filter>
@@ -20,5 +29,6 @@
 		<activity android:name=".SelectAccount"
 			android:theme="@android:style/Theme.Dialog"
 			/>
+		<activity android:name=".AddFoodLog" />
     </application>
 </manifest>
