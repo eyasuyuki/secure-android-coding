@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -11,6 +13,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,20 +23,39 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class Main extends ListActivity {
 	private static final String TAG = Main.class.getName();
 	
-	public static final int GET_ACCOUNT = 1;
+	public static final int ACCOUNT_SELECTED = 1;
+	public static final int GRANT_AUTH_TOKEN = 2;
 	public static final String ACCOUNT_TYPE = "com.google";
 	public static final String APP_ENGINE = "ah";
-    public static final String AUTH_TOKEN_KEY = "authtoken";
 
 	Handler handler = new Handler();
+	DefaultHttpClient client = null;;
 
 	Account account = null;
 	String authToken = null;
 	
+	final class InvalidateTokenListener implements TokenListener {
+		@Override
+		public void invalidate() {
+			AccountManager am = AccountManager.get(Main.this);
+			am.invalidateAuthToken(Main.APP_ENGINE, authToken); // dispose token
+			authToken = null;
+			handler.post(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(
+							Main.this,
+							Main.this.getString(R.string.invalidate_token_message),
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+	}
 	
 	final class NutrimancerCallback implements AccountManagerCallback<Bundle> {
 		@Override
@@ -43,13 +65,32 @@ public class Main extends ListActivity {
 				if (result.containsKey(AccountManager.KEY_INTENT)) {
 				        Intent intent =
 				                (Intent) result.get(AccountManager.KEY_INTENT);
-				        Main.this.startActivityForResult(intent, Main.GET_ACCOUNT);
+				        Main.this.startActivityForResult(intent, Main.GRANT_AUTH_TOKEN);
 				        return;
 				}
 				
 				authToken =
 				        result.getString(AccountManager.KEY_AUTHTOKEN);
 				Log.d(TAG, "getAuthToken: authToken="+authToken);
+				client = new DefaultHttpClient();
+				ProgressDialog dialog = new ProgressDialog(Main.this);
+				AsyncUpdate update =
+					new AsyncUpdate(
+							Main.this,
+							client,
+							authToken,
+							Main.this.getListView(),
+							dialog);
+				AsyncCookie async =
+					new AsyncCookie(
+							Main.this,
+							dialog,
+							client,
+							authToken,
+							getListView(),
+							new InvalidateTokenListener(),
+							update);
+				async.execute();
 			} catch (OperationCanceledException e) {
 				e.printStackTrace();
 			} catch (AuthenticatorException e) {
@@ -67,17 +108,10 @@ public class Main extends ListActivity {
         
         checkAccount();
         initAccount();
-        
-        // login by account manager
-        AccountManager am = AccountManager.get(this);
-        AccountManagerFuture<Bundle> future =
-        	am.getAuthToken(account, APP_ENGINE, true, new NutrimancerCallback(), handler);
-        try {
-			authToken = future.getResult().getString(AUTH_TOKEN_KEY);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        Log.d(TAG, "onCreate: authToken="+authToken);
+
+        if (account != null) {
+        	getAuthToken();
+        }
     }
     
     void checkAccount() {
@@ -92,10 +126,7 @@ public class Main extends ListActivity {
     void startSelectAccount() {
 		Intent intent = new Intent();
 		intent.setClass(this, SelectAccount.class);
-		intent.setFlags(
-				Intent.FLAG_ACTIVITY_NEW_TASK
-				| Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-		startActivity(intent);
+		startActivityForResult(intent, ACCOUNT_SELECTED);
     }
     
     void initAccount() {
@@ -115,6 +146,18 @@ public class Main extends ListActivity {
     		account = ahash.get(ac);
     	}
     }
+    
+    void getAuthToken() {
+    	AccountManager am = AccountManager.get(this);
+    	AccountManagerFuture<Bundle> future =
+    		am.getAuthToken(account, APP_ENGINE, true, new NutrimancerCallback(), handler);
+    	try {
+    		authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	Log.d(TAG, "onCreate: authToken="+authToken);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,20 +170,33 @@ public class Main extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.menu_add_food_log:
+			Intent intent = new Intent();
+			intent.setClass(this, AddFoodLog.class);
+			intent.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
+			startActivity(intent);
+			break;
 		case R.id.menu_select_account:
 			startSelectAccount();
 			break;
 		}
 		return true;
 	}
+	
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            //Log.d(TAG, "requestCode="+requestCode+", resultCode="+resultCode+", data"+data);
+            Log.d(TAG, "onActivityResult: requestCode="+requestCode+", resultCode="+resultCode+", data="+data);
             switch (requestCode) {
-            case GET_ACCOUNT:
-                    if (resultCode == RESULT_OK && data != null) {
-                            authToken = data.getStringExtra(AUTH_TOKEN_KEY);
-                            Log.d(TAG, "onActivityResult: authToken="+authToken);
+            case ACCOUNT_SELECTED:
+            	if (resultCode == RESULT_OK && data != null) {
+            		account =
+            			(Account)data.getExtras().get(SelectAccount.DEFAULT_ACCOUNT_KEY);
+            		Log.d(TAG, "onActivityResult: account="+account);
+                	getAuthToken();
+            	}
+            case GRANT_AUTH_TOKEN:
+                    if (resultCode == RESULT_OK) {
+                    	getAuthToken();
                     }
                     break;
             }
