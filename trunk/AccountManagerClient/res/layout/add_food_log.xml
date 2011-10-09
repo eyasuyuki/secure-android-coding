@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- log date -->
+    <TextView android:text="@string/log_date_label"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
+	<EditText android:id="@+id/log_date_edit"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:inputType="date"
+	    android:digits="0123456789-"/>
+	<!-- time -->
+	<Spinner
+	    android:id="@+id/time_spinner"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content"
+	    android:entries="@array/time_array"
+	    android:layout_alignParentTop="true"
+	    android:layout_centerHorizontal="true"/>
+	<!-- food -->
+    <TextView android:text="@string/food_label"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
+	<EditText android:id="@+id/food_edit"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
+	<!-- kcal -->
+    <TextView android:text="@string/kcal_label"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
+	<EditText android:id="@+id/kcal_edit"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:inputType="numberDecimal"
+	    android:digits="0123456789"
+	     />
+	<!-- salt -->
+    <TextView android:text="@string/salt_label"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
+	<EditText android:id="@+id/salt_edit"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:inputType="number"
+	    android:digits=".0123456789"
+	     />
+	<!-- post -->
+	<Button android:id="@+id/post_button"
+		android:text="@string/post_button_label"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
+</LinearLayout>

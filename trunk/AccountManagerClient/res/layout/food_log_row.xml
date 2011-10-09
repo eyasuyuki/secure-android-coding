@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	    <!-- log date -->
+		<TextView android:text="@string/log_date_label"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+		<TextView android:id="@+id/log_date_text"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+	    <!-- time -->
+		<TextView android:text="@string/time_label"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+		<TextView android:id="@+id/time_text"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+	</LinearLayout>
+    <!-- food -->
+	<TextView android:id="@+id/foof_text"
+		android:textSize="18sp"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" />
+    <LinearLayout
+	    android:orientation="horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	    <!-- kcal -->
+		<TextView android:text="@string/kcal_label"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+		<TextView android:id="@+id/kcal_text"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+		<TextView android:text="@string/kcal_unit_label"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+	    <!-- salt -->
+		<TextView android:text="@string/salt_label"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+		<TextView android:id="@+id/salt_text"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+		<TextView android:text="@string/salt_unit_label"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content" />
+	</LinearLayout>
+</LinearLayout>
