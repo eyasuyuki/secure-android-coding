@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 public class SelectAccount extends ListActivity {
 	public static final String AUTHORITIES_FILTER_KEY = "authorities";
+	public static final String DEFAULT_ACCOUNT_KEY = "default_account";
 	Account[] accounts = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,9 @@ public class SelectAccount extends ListActivity {
     		&& accounts.length >= position) {
     		Account account = accounts[position];
     		saveToPreference(account.name);
+            Intent data = new Intent();
+            data.putExtra(DEFAULT_ACCOUNT_KEY, account);
+            setResult(RESULT_OK, data);
     		finish();
     	}
 	}
