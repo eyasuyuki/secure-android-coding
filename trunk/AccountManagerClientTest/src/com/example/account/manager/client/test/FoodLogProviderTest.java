@@ -1,20 +1,16 @@
 package com.example.account.manager.client.test;
 
-import java.text.SimpleDateFormat;
-
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.BaseColumns;
 import android.test.AndroidTestCase;
 
 import com.example.account.manager.client.provider.FoodLog;
 import com.example.account.manager.client.provider.FoodLogProvider;
 
 public class FoodLogProviderTest extends AndroidTestCase {
-	SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd");
 
 	Uri insert(FoodLog foodLog) {
 		Uri result = null;
@@ -54,7 +50,7 @@ public class FoodLogProviderTest extends AndroidTestCase {
 				while (cursor.moveToNext()) {
 					result = new FoodLog();
 					int i = 0;
-					result.setId(cursor.getInt(i++));
+					result.setId(cursor.getLong(i++));
 					result.setKey(cursor.getString(i++));
 					result.setVersion(cursor.getLong(i++));
 					result.setUser(cursor.getString(i++));
@@ -116,5 +112,15 @@ public class FoodLogProviderTest extends AndroidTestCase {
 		insert(createData());
 		count = delete(null);
 		assertNotSame(0, count);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		Context context = getContext();
+		int result =
+			context.getContentResolver().delete(
+					FoodLogProvider.CONTENT_URI,
+					FoodLogProvider.COLUMN_KEY + " = ? ",
+					new String[]{createData().getKey()});
 	}
 }
