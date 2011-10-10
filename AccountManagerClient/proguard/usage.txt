@@ -1,0 +1,65 @@
+com.example.account.manager.client.AsyncCookie:
+    public static final int RETRY_MAX
+com.example.account.manager.client.Main:
+    public static final int ACCOUNT_SELECTED
+    public static final int GRANT_AUTH_TOKEN
+    public static final java.lang.String ACCOUNT_TYPE
+    public static final java.lang.String APP_ENGINE
+com.example.account.manager.client.Manifest
+com.example.account.manager.client.Manifest$permission
+com.example.account.manager.client.R
+com.example.account.manager.client.R$array
+com.example.account.manager.client.R$attr
+com.example.account.manager.client.R$drawable
+com.example.account.manager.client.R$id
+com.example.account.manager.client.R$layout
+com.example.account.manager.client.R$menu
+com.example.account.manager.client.R$string
+com.example.account.manager.client.SelectAccount:
+    public static final java.lang.String AUTHORITIES_FILTER_KEY
+    public static final java.lang.String DEFAULT_ACCOUNT_KEY
+com.example.account.manager.client.provider.FoodLog:
+    public static final java.lang.String KEY_KEY
+    public static final java.lang.String VERSION_KEY
+    public static final java.lang.String USER_KEY
+    public static final java.lang.String LOG_DATE_KEY
+    public static final java.lang.String TIME_KEY
+    public static final java.lang.String FOOD_KEY
+    public static final java.lang.String KCAL_KEY
+    public static final java.lang.String SALT_KEY
+    public static final java.lang.String CREATE_DATE_KEY
+    84:84:public long getId()
+    87:88:public void setId(long)
+    90:90:public java.lang.String getKey()
+    93:94:public void setKey(java.lang.String)
+    96:96:public long getVersion()
+    99:100:public void setVersion(long)
+    102:102:public java.lang.String getUser()
+    105:106:public void setUser(java.lang.String)
+    111:112:public void setLogDate(java.lang.String)
+    117:118:public void setTime(java.lang.String)
+    123:124:public void setFood(java.lang.String)
+    129:130:public void setKcal(double)
+    135:136:public void setSalt(double)
+    138:138:public java.lang.String getCreateDate()
+    141:142:public void setCreateDate(java.lang.String)
+com.example.account.manager.client.provider.FoodLogProvider:
+    public static final java.lang.String DATABASE_NAME
+    public static final int DATABASE_VERSION
+    public static final java.lang.String TABLE_NAME
+    public static final java.lang.String COLUMN_KEY
+    public static final java.lang.String COLUMN_VERSION
+    public static final java.lang.String COLUMN_USER
+    public static final java.lang.String COLUMN_LOG_DATE
+    public static final java.lang.String COLUMN_TIME
+    public static final java.lang.String COLUMN_FOOD
+    public static final java.lang.String COLUMN_KCAL
+    public static final java.lang.String COLUMN_SALT
+    public static final java.lang.String COLUMN_CREATE_DATE
+    private static final int LOGS
+    private static final int LOG
+    private static final long UNKNOWN_ID
+    private static final java.lang.String CONTENT_TYPE
+    private static final java.lang.String CONTENT_ITEM_TYPE
+com.example.account.manager.client.provider.FoodLogProvider$Helper:
+    private static final java.lang.String CREATE_FOOD_LOG_TABLE_SQL

@@ -1,0 +1,4 @@
+com.example.account.manager.client.AddFoodLog
+com.example.account.manager.client.Main
+com.example.account.manager.client.SelectAccount
+com.example.account.manager.client.provider.FoodLogProvider
