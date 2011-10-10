@@ -1,7 +1,6 @@
 package com.example.package2json;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,16 +16,22 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.TextView;
 
 public class AsyncPackages extends AsyncTask<Void, Void, Void> {
+	private static final String TAG = AsyncPackages.class.getName();
 	private static final String JSON_FILE_NAME = "/apps.json";
+	//private static final String JSON_FILE_NAME = "/sdcard/apps.json";
 
 	Context context = null;
 	TextView view = null;
@@ -84,13 +89,8 @@ public class AsyncPackages extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		view.setText(json);
-		StringBuffer path = new StringBuffer();
-		File filesDir = context.getExternalFilesDir(null);
-		if (filesDir != null) {
-			path.append(filesDir.getAbsolutePath());
-		}
-		path.append(JSON_FILE_NAME);
-		saveJSON(json, path.toString());
+		saveJSON(json,
+				context.getExternalFilesDir(null).getAbsolutePath()+JSON_FILE_NAME);
 		try {
 			dialog.dismiss();
 		} catch (Exception e) {
@@ -111,13 +111,61 @@ public class AsyncPackages extends AsyncTask<Void, Void, Void> {
 		if (signatures != null && signatures.length > 0) {
 			List<String> clist = new ArrayList<String>();
 			for (Signature s : signatures) {
-				clist.add(loadCertificate(s));
+				X509Certificate c = loadCertificate(s);
+				String base64 = Base64.encodeToString(c.getSignature(), Base64.DEFAULT);
+				clist.add(base64);
 			}
 			if (clist.size() == 1) {
 				kvp.put("publicKey", clist.get(0));
 			} else {
 				kvp.put("publicKey", new JSONArray(clist));
 			}
+		}
+		ActivityInfo[] activities = p.activities;
+		if (activities != null && activities.length > 0) {
+			List<JSONObject> alist = new ArrayList<JSONObject>();
+			for (ActivityInfo a: activities) {
+				Map<String, Object>amap = new HashMap<String, Object>();
+				amap.put("configChanges", a.configChanges);
+				amap.put("descriptionRes", a.descriptionRes);
+				amap.put("enabled", a.enabled);
+				amap.put("exported", a.exported);
+				amap.put("flags", a.flags);
+				amap.put("icon", a.icon);
+				amap.put("labelRes", a.labelRes);
+				amap.put("launchMode", a.launchMode);
+				amap.put("logo", a.logo);
+				amap.put("name", a.name);
+				amap.put("nonLocalizedLabel", a.nonLocalizedLabel);
+				amap.put("packageName", a.packageName);
+				amap.put("screenOrientation", a.screenOrientation);
+				amap.put("softInputMode", a.softInputMode);
+				amap.put("targetActivity", a.targetActivity);
+				amap.put("taskAffinity", a.taskAffinity);
+				amap.put("theme", a.theme);
+				alist.add(new JSONObject(amap));
+			}
+			kvp.put("activities", new JSONArray(alist));
+		}
+		ServiceInfo[] services = p.services;
+		if (services != null && services.length > 0) {
+			List<JSONObject> slist = new ArrayList<JSONObject>();
+			for (ServiceInfo s: services) {
+				Map<String, Object>smap = new HashMap<String, Object>();
+				smap.put("descriptionRes", s.descriptionRes);
+				smap.put("enabled", s.enabled);
+				smap.put("exported", s.exported);
+				smap.put("icon", s.icon);
+				smap.put("labelRes", s.labelRes);
+				smap.put("logo", s.logo);
+				smap.put("name", s.name);
+				smap.put("nonLocalizedLabel", s.nonLocalizedLabel);
+				smap.put("packageName", s.packageName);
+				smap.put("permission", s.permission);
+				smap.put("processName", s.processName);
+				slist.add(new JSONObject(smap));
+			}
+			kvp.put("services", new JSONArray(slist));
 		}
 		ApplicationInfo a = p.applicationInfo;
 		kvp.put("dataDir", a.dataDir);
@@ -147,8 +195,12 @@ public class AsyncPackages extends AsyncTask<Void, Void, Void> {
 		return new JSONObject(kvp);
 	}
 
-	String loadCertificate(Signature signature) {
-		String result = null;
+	/*
+	 * 下記を参考にした
+	 * Get Certificate from Android Application
+	 * http://thomascannon.net/misc/android_apk_certificate/
+	 */
+	X509Certificate loadCertificate(Signature signature) {
 		byte[] cert = signature.toByteArray();
 		InputStream input = new ByteArrayInputStream(cert);
 
@@ -156,21 +208,20 @@ public class AsyncPackages extends AsyncTask<Void, Void, Void> {
 		try {
 			cf = CertificateFactory.getInstance("X509");
 		} catch (Exception e) {
-			// TODO some error checking
 			e.printStackTrace();
 		}
 		X509Certificate c = null;
 		try {
 			c = (X509Certificate) cf.generateCertificate(input);
-			result = Base64.encodeToString(c.getSignature(), Base64.DEFAULT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return result;
+		
+		return c;
 	}
 	
 	void saveJSON(String json, String fileName) {
+		Log.d(TAG, "save2JSON: fileName="+fileName);
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(fileName);
