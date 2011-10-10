@@ -95,8 +95,10 @@ public class Main extends Activity {
     	final int RETRY_MAX = 2;
     	
 		URI uri = URI.create(uriString);
-    	HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()); 
-		DefaultHttpClient client = new DefaultHttpClient();
+    	HttpHost host =
+    		new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()); 
+		DefaultHttpClient client =
+			new DefaultHttpClient();
 
 		// set username-password credentials
 		if (user != null && user.length() > 0) {
