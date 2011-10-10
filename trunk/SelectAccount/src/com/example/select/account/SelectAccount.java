@@ -24,7 +24,6 @@ public class SelectAccount extends ListActivity {
         setContentView(R.layout.main);
 		AccountManager am = AccountManager.get(this);
 
-
 		accounts = am.getAccountsByType("com.google");
 		if (accounts == null || accounts.length <= 0) {
 			addAccount();
