@@ -113,7 +113,7 @@ public class AsyncLogin extends AsyncTask<Void, Void, Void> {
             if (get != null) {
                 get.abort();
             }
-            failed = "Response code is " + Integer.toString(code) + ", mesage:"
+            failed = "Response code is " + Integer.toString(code) + ", message:"
                     + e.getLocalizedMessage();
         }
         return null;
