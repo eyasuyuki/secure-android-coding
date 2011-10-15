@@ -8,4 +8,6 @@
     <string name="password_label">Password:</string>
     <string name="message_label">Page content:</string>
     <string name="login_button_label">Login</string>
+    <!-- async login -->
+    <string name="progress_title">Logging in...</string>
 </resources>
