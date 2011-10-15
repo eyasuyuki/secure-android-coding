@@ -50,87 +50,12 @@ public class Main extends Activity {
 		@Override
 		public void onClick(View v) {
 			messageText.setText(null);
-			HttpEntity entity = null;
-			try {
-				entity =
-					login(uriEdit.getText().toString(),
-						userEdit.getText().toString(),
-						passwordEdit.getText().toString());
-			} catch (Exception e1) {
-				Toast.makeText(Main.this, e1.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-				e1.printStackTrace();
-			}
-			if (entity != null) {
-				StringBuffer buf = new StringBuffer();
-				InputStream in = null;
-				try {
-					in = entity.getContent();
-					int c = -1;
-					while ((c = in.read()) > -1) {
-						buf.append((char)c);
-					}
-					Toast.makeText(Main.this, buf.toString(), Toast.LENGTH_LONG).show();
-					messageText.setText(buf.toString());
-				} catch (Exception e) {
-					e.printStackTrace();
-				} finally {
-					if (in != null) {
-						try {
-							in.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
+			String uriString = uriEdit.getText().toString();
+			String user = userEdit.getText().toString();
+			String password = passwordEdit.getText().toString();
+			AsyncLogin async = new AsyncLogin(Main.this, uriString, user, password, messageText);
+			async.execute();
 		}
     }
 
-    /*
-     * 下記を参考にしました:
-     * HttpClient Tutorial - Chapter 4. HTTP authentication
-     * http://hc.apache.org/httpcomponents-client-ga/tutorial/html/authentication.html
-     */
-    HttpEntity login(String uriString, String user, String password) {
-    	final int RETRY_MAX = 2;
-    	
-		URI uri = URI.create(uriString);
-    	HttpHost host =
-    		new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme()); 
-		DefaultHttpClient client =
-			new DefaultHttpClient();
-
-		// set username-password credentials
-		if (user != null && user.length() > 0) {
-			client.getCredentialsProvider().setCredentials(
-					new AuthScope(uri.getHost(), uri.getPort()),
-					new UsernamePasswordCredentials(user, password));
-		}
-
-		HttpContext context = new BasicHttpContext();
-		HttpGet get = new HttpGet(uriString);
-
-		HttpResponse response = null;
-
-		try {
-			int code = HttpStatus.SC_UNAUTHORIZED;
-			for (int i=0; i<RETRY_MAX; i++) {
-				response = client.execute(host, get, context);
-				code = response.getStatusLine().getStatusCode();
-				if (code == HttpStatus.SC_OK
-					|| code == HttpStatus.SC_CREATED) {
-					return response.getEntity();
-				}
-			}
-			// fail
-			throw new HttpResponseException(code, "Response code is "
-					+ Integer.toString(code));
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (get != null) {
-				get.abort();
-			}
-			throw new RuntimeException(e);
-		}
-	}
 }
