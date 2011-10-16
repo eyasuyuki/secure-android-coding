@@ -16,7 +16,9 @@
     <string name="yes_label">Yes</string>
     <string name="cancel_label">Cancel</string>
     <!-- progress dialog -->
-    <string name="progress_title">Update...</string>
+    <string name="auth_token_title">Get Auth Token...</string>
+    <string name="cookie_title">Get Cookie...</string>
+    <string name="update_title">Update...</string>
     <!-- invalidate token -->
     <string name="invalidate_token_message">Bad token. Login failed.</string>
     <!-- food log list -->
