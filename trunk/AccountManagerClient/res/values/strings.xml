@@ -9,6 +9,7 @@
     <!-- preference key -->
     <string name="default_account_key">default_account</string>
     <!-- menu -->
+    <string name="menu_update_label">Update</string>
     <string name="menu_add_food_log_label">Add Food Log</string>
     <string name="menu_select_account_label">Select Account</string>
     <!-- dialog -->
