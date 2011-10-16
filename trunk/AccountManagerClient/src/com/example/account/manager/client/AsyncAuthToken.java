@@ -32,19 +32,18 @@ public class AsyncAuthToken extends AsyncTask<Void, Void, Void> {
 			,Handler handler
 			,Account account
 			,AccountManagerCallback<Bundle> callback
-			,AsyncTask<String, Void, Void> next
-			,ProgressDialog dialog) {
+			,AsyncTask<String, Void, Void> next) {
 		this.context = context;
 		this.handler = handler;
 		this.callback = callback;
 		this.next = next;
-		this.dialog = dialog;
 	}
 	
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
-		super.onPreExecute();
+		dialog = new ProgressDialog(context);
+		dialog.setTitle(R.string.auth_token_title);
+		try { dialog.show(); } catch (Exception e) {}
 	}
 	
 	Account getAccountFromPrefs() {
@@ -89,12 +88,7 @@ public class AsyncAuthToken extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void result) {
 		if (authToken != null && next != null) {
 			next.execute(authToken);
-		} else {
-			if (dialog != null) {
-				try { dialog.dismiss(); } catch (Exception e) {}
-			}
 		}
-		super.onPostExecute(result);
+		try { dialog.dismiss(); } catch (Exception e) {}
 	}
-
 }

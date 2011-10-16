@@ -40,13 +40,20 @@ public class AsyncUpdate extends AsyncTask<Void, Void, Void> {
 	
 	public AsyncUpdate(Context context,
 			DefaultHttpClient client,
-			ListView view,
-			ProgressDialog dialog) {
+			ListView view) {
 		this.context = context;
 		this.client = client;
 		this.view = view;
-		this.dialog = dialog;
 	}
+	
+	@Override
+	protected void onPreExecute() {
+		dialog = new ProgressDialog(context);
+		dialog.setTitle(R.string.update_title);
+		try { dialog.show(); } catch (Exception e) {}
+	}
+
+
 
 	@Override
 	protected Void doInBackground(Void... params) {

@@ -71,7 +71,6 @@ public class AddFoodLog extends Activity {
 		public void onClick(View v) {
 			if (token != null) {
 				DefaultHttpClient client = new DefaultHttpClient();
-				ProgressDialog dialog = new ProgressDialog(AddFoodLog.this);
 				AsyncPost post =
 					new AsyncPost(
 							AddFoodLog.this,
@@ -80,13 +79,11 @@ public class AddFoodLog extends Activity {
 							time,
 							food.getText().toString(),
 							kcal.getText().toString(),
-							salt.getText().toString(),
-							dialog
+							salt.getText().toString()
 					);
 				AsyncCookie cookie =
 					new AsyncCookie(
 							AddFoodLog.this,
-							dialog,
 							client,
 							new InvalidateTokenListener(),
 							post);

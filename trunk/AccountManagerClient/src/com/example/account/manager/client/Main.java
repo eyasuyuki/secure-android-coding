@@ -73,17 +73,14 @@ public class Main extends ListActivity {
 				Log.d(TAG, "run: authToken="+authToken);
 				if (authToken != null) {
 					client = new DefaultHttpClient();
-					ProgressDialog dialog = new ProgressDialog(Main.this);
 					AsyncUpdate update =
 						new AsyncUpdate(
 								Main.this,
 								client,
-								getListView(),
-								dialog);
+								getListView());
 					AsyncCookie async =
 						new AsyncCookie(
 								Main.this,
-								dialog,
 								client,
 								new InvalidateTokenListener(),
 								update);
@@ -147,17 +144,14 @@ public class Main extends ListActivity {
     
     void asyncAuthToken() {
 		client = new DefaultHttpClient();
-		ProgressDialog dialog = new ProgressDialog(this);
 		AsyncUpdate update =
 			new AsyncUpdate(
 					this,
 					client,
-					getListView(),
-					dialog);
+					getListView());
 		AsyncCookie cookie =
 			new AsyncCookie(
 					this,
-					dialog,
 					client,
 					new InvalidateTokenListener(),
 					update);
@@ -167,8 +161,7 @@ public class Main extends ListActivity {
 					handler,
 					account,
 					new NutrimancerCallback(),
-					cookie,
-					dialog
+					cookie
 					);
 		async.execute();
     }
