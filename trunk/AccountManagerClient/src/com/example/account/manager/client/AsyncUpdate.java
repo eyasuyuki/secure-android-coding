@@ -28,109 +28,111 @@ import com.example.account.manager.client.provider.FoodLog;
  * http://blog.notdot.net/2010/05/Authenticating-against-App-Engine-from-an-Android-app
  */
 public class AsyncUpdate extends AsyncTask<Void, Void, Void> {
-	private static final String TAG = AsyncUpdate.class.getName();
+    private static final String TAG =
+        AsyncUpdate.class.getName();
 
-	Context context = null;
-	DefaultHttpClient client = null;
-	ProgressDialog dialog = null;
-	String content = null;
-	JSONArray array = null;
-	List<FoodLog> logList = new ArrayList<FoodLog>();
-	ListView view = null;
-	
-	public AsyncUpdate(Context context,
-			DefaultHttpClient client,
-			ListView view) {
-		this.context = context;
-		this.client = client;
-		this.view = view;
-	}
-	
-	@Override
-	protected void onPreExecute() {
-		dialog = new ProgressDialog(context);
-		dialog.setTitle(R.string.update_title);
-		try { dialog.show(); } catch (Exception e) {}
-	}
+    Context context = null;
+    DefaultHttpClient client = null;
+    ProgressDialog dialog = null;
+    String content = null;
+    JSONArray array = null;
+    List<FoodLog> logList = new ArrayList<FoodLog>();
+    ListView view = null;
 
+    public AsyncUpdate(
+            Context context,
+            DefaultHttpClient client,
+            ListView view) {
+        this.context = context;
+        this.client = client;
+        this.view = view;
+    }
 
+    @Override
+    protected void onPreExecute() {
+        dialog = new ProgressDialog(context);
+        dialog.setTitle(R.string.update_title);
+        try { dialog.show(); } catch (Exception e) {}
+    }
 
-	@Override
-	protected Void doInBackground(Void... params) {
-		URI uri = URI.create(context.getString(R.string.json_uri));
-		HttpResponse response = null;
-		InputStream in = null;
-		try {
-			for (int i=0; i<AsyncCookie.RETRY_MAX; i++) {
-				HttpGet get = new HttpGet(uri);
-				response = client.execute(get);
-				int code = HttpStatus.SC_UNAUTHORIZED;
-				StatusLine status = response.getStatusLine();
-				if (status != null) {
-					code = status.getStatusCode();
-					if (code == HttpStatus.SC_OK || code == HttpStatus.SC_CREATED) {
-						break;
-					}
-				}
-			}
-			HttpEntity entity = response.getEntity();
-			in = entity.getContent();
-			StringBuffer buf = new StringBuffer();
-			int c = -1;
-			while ((c = in.read()) > -1) {
-				buf.append((char)c);
-			}
-			content = buf.toString();
-			Log.d(TAG, "doInBackground: content="+content);
-			if (content != null && content.length() > 0) {
-				content2FoodLogs(content);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;
-	}
-	
-	void content2FoodLogs(String content) {
-		try {
-			array = new JSONArray(content);
-			Log.d(TAG, "content2FoodLog: array="+array.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (array != null) {
-			for (int i=0; i<array.length(); i++) {
-				JSONObject jobj = null;
-				try {
-					jobj = array.getJSONObject(i);
-					Log.d(TAG, "content2FoodLog: array["+i+"]="+jobj);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				if (jobj != null) {
-					FoodLog foodLog = new FoodLog(jobj);
-					logList.add(foodLog);
-				}
-			}
-		}
-	}
+    @Override
+    protected Void doInBackground(Void... params) {
+        URI uri =
+            URI.create(context.getString(R.string.json_uri));
+        HttpResponse response = null;
+        InputStream in = null;
+        try {
+            for (int i = 0; i < AsyncCookie.RETRY_MAX; i++) {
+                HttpGet get = new HttpGet(uri);
+                response = client.execute(get);
+                int code = HttpStatus.SC_UNAUTHORIZED;
+                StatusLine status = response.getStatusLine();
+                if (status != null) {
+                    code = status.getStatusCode();
+                    if (code == HttpStatus.SC_OK
+                            || code == HttpStatus.SC_CREATED) {
+                        HttpEntity entity = response.getEntity();
+                        in = entity.getContent();
+                        StringBuffer buf = new StringBuffer();
+                        int c = -1;
+                        while ((c = in.read()) > -1) {
+                            buf.append((char) c);
+                        }
+                        content = buf.toString();
+                        Log.d(TAG, "doInBackground: content=" + content);
+                        if (content != null && content.length() > 0) {
+                            content2FoodLogs(content);
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
 
-	@Override
-	protected void onPostExecute(Void result) {
-		FoodLogAdapter adapter =
-			new FoodLogAdapter(
-					context,
-					R.layout.food_log_row,
-					logList);
-		view.setAdapter(adapter);
+    void content2FoodLogs(String content) {
+        try {
+            array = new JSONArray(content);
+            Log.d(TAG, "content2FoodLog: array=" + array.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jobj = null;
+                try {
+                    jobj = array.getJSONObject(i);
+                    Log.d(TAG, "content2FoodLog: array[" + i + "]=" + jobj);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (jobj != null) {
+                    FoodLog foodLog = new FoodLog(jobj);
+                    logList.add(foodLog);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        FoodLogAdapter adapter =
+            new FoodLogAdapter(
+                    context,
+                    R.layout.food_log_row,
+                    logList);
+        view.setAdapter(adapter);
         try { dialog.dismiss(); } catch (Exception e) {}
-	}
+    }
 }
