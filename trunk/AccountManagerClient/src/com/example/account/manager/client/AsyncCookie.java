@@ -22,31 +22,27 @@ import android.widget.Toast;
  * Authenticating against App Engine from an Android app
  * http://blog.notdot.net/2010/05/Authenticating-against-App-Engine-from-an-Android-app
  */
-public class AsyncCookie extends AsyncTask<Void, Void, Void> {
+public class AsyncCookie extends AsyncTask<String, Void, Void> {
 	private static final String TAG = AsyncCookie.class.getName();
+	
+	public static final String SACSID = "SACSID";
 	public static final int RETRY_MAX = 2;
 
 	Context context = null;
-	//Handler handler = null;
 	DefaultHttpClient client = null;
-	String token = null;
 	TokenListener listener = null;
 	AsyncTask<Void, Void, Void> next = null;
 	ProgressDialog dialog = null;
 	boolean isValidCookie = false;
 	
 	public AsyncCookie(Context context,
-			//Handler handler,
 			ProgressDialog dialog,
 			DefaultHttpClient client,
-			String token,
 			TokenListener listener,
 			AsyncTask<Void, Void, Void> next) {
 		this.context = context;
-		//this.handler = handler;
 		this.dialog = dialog;
 		this.client = client;
-		this.token = token;
 		this.listener = listener;
 		this.next = next;
 	}
@@ -58,9 +54,9 @@ public class AsyncCookie extends AsyncTask<Void, Void, Void> {
 	}
 
 	@Override
-	protected Void doInBackground(Void... params) {
+	protected Void doInBackground(String... params) {
     	
-		URI uri = URI.create(context.getString(R.string.login_uri)+token);
+		URI uri = URI.create(context.getString(R.string.login_uri)+params[0]);
     	HttpGet get = new HttpGet(uri); 
 		client.getParams().setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
 		for (int i=0; i<RETRY_MAX; i++) {
@@ -68,7 +64,7 @@ public class AsyncCookie extends AsyncTask<Void, Void, Void> {
 	        	HttpResponse response = client.execute(get);
 				for(Cookie cookie : client.getCookieStore().getCookies()) {
 					Log.d(TAG, ""+cookie.getName());
-                    if(cookie.getName().equals("SACSID")) {
+                    if(cookie.getName().equals(SACSID)) {
                     	isValidCookie = true;
                     	return null;
                     }

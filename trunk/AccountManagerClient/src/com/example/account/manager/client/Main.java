@@ -31,8 +31,6 @@ public class Main extends ListActivity {
 	public static final int ACCOUNT_SELECTED = 1;
 	public static final int GRANT_AUTH_TOKEN = 2;
 	public static final String ACCOUNT_TYPE = "com.google";
-	public static final String APP_ENGINE = "ah";
-
 	Handler handler = new Handler();
 	DefaultHttpClient client = null;;
 
@@ -43,7 +41,7 @@ public class Main extends ListActivity {
 		@Override
 		public void invalidate() {
 			AccountManager am = AccountManager.get(Main.this);
-			am.invalidateAuthToken(Main.APP_ENGINE, authToken); // dispose token
+			am.invalidateAuthToken(AsyncAuthToken.APP_ENGINE, authToken); // dispose token
 			authToken = null;
 			handler.post(new Runnable() {
 				@Override
@@ -58,6 +56,7 @@ public class Main extends ListActivity {
 	}
 	
 	final class NutrimancerCallback implements AccountManagerCallback<Bundle> {
+		private final String TAG = NutrimancerCallback.class.getName();
 		@Override
 		public void run(AccountManagerFuture<Bundle> future) {
 			try {
@@ -71,26 +70,25 @@ public class Main extends ListActivity {
 				
 				authToken =
 				        result.getString(AccountManager.KEY_AUTHTOKEN);
-				Log.d(TAG, "getAuthToken: authToken="+authToken);
-				client = new DefaultHttpClient();
-				ProgressDialog dialog = new ProgressDialog(Main.this);
-				AsyncUpdate update =
-					new AsyncUpdate(
-							Main.this,
-							client,
-							authToken,
-							getListView(),
-							dialog);
-				AsyncCookie async =
-					new AsyncCookie(
-							Main.this,
-							//handler,
-							dialog,
-							client,
-							authToken,
-							new InvalidateTokenListener(),
-							update);
-				async.execute();
+				Log.d(TAG, "run: authToken="+authToken);
+				if (authToken != null) {
+					client = new DefaultHttpClient();
+					ProgressDialog dialog = new ProgressDialog(Main.this);
+					AsyncUpdate update =
+						new AsyncUpdate(
+								Main.this,
+								client,
+								getListView(),
+								dialog);
+					AsyncCookie async =
+						new AsyncCookie(
+								Main.this,
+								dialog,
+								client,
+								new InvalidateTokenListener(),
+								update);
+					async.execute(authToken);
+				}
 			} catch (OperationCanceledException e) {
 				e.printStackTrace();
 			} catch (AuthenticatorException e) {
@@ -110,7 +108,7 @@ public class Main extends ListActivity {
         initAccount();
 
         if (account != null) {
-        	getAuthToken();
+        	asyncAuthToken();
         }
     }
     
@@ -147,44 +145,34 @@ public class Main extends ListActivity {
     	}
     }
     
-    void getAuthToken() {
-    	AccountManager am = AccountManager.get(this);
-    	AccountManagerFuture<Bundle> future =
-    		am.getAuthToken(account, APP_ENGINE, true, new NutrimancerCallback(), handler);
-    	try {
-    		authToken = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	Log.d(TAG, "onCreate: authToken="+authToken);
+    void asyncAuthToken() {
+		client = new DefaultHttpClient();
+		ProgressDialog dialog = new ProgressDialog(this);
+		AsyncUpdate update =
+			new AsyncUpdate(
+					this,
+					client,
+					getListView(),
+					dialog);
+		AsyncCookie cookie =
+			new AsyncCookie(
+					this,
+					dialog,
+					client,
+					new InvalidateTokenListener(),
+					update);
+		AsyncAuthToken async =
+			new AsyncAuthToken(
+					this,
+					handler,
+					account,
+					new NutrimancerCallback(),
+					cookie,
+					dialog
+					);
+		async.execute();
     }
     
-	@Override
-	protected void onResume() {
-		super.onRestart();
-		if (authToken != null) {
-			client = new DefaultHttpClient();
-			ProgressDialog dialog = new ProgressDialog(Main.this);
-			AsyncUpdate update =
-				new AsyncUpdate(
-						this,
-						client,
-						authToken,
-						getListView(),
-						dialog);
-			AsyncCookie async =
-				new AsyncCookie(
-						this,
-						//handler,
-						dialog,
-						client,
-						authToken,
-						new InvalidateTokenListener(),
-						update);
-			async.execute();
-		}
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -218,11 +206,12 @@ public class Main extends ListActivity {
             		account =
             			(Account)data.getExtras().get(SelectAccount.DEFAULT_ACCOUNT_KEY);
             		Log.d(TAG, "onActivityResult: account="+account);
-                	getAuthToken();
+            		asyncAuthToken();
             	}
             case GRANT_AUTH_TOKEN:
-                    if (resultCode == RESULT_OK) {
-                    	getAuthToken();
+                    if (resultCode == RESULT_OK && authToken == null) {
+                    	asyncAuthToken();
+                    	Log.d(TAG, "onActivityResult: GRAND_AUTH_TOKEN: authToken="+authToken);
                     }
                     break;
             }

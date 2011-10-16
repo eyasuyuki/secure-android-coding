@@ -86,13 +86,11 @@ public class AddFoodLog extends Activity {
 				AsyncCookie cookie =
 					new AsyncCookie(
 							AddFoodLog.this,
-							//handler,
 							dialog,
 							client,
-							token,
 							new InvalidateTokenListener(),
 							post);
-				cookie.execute();
+				cookie.execute(token);
 			}
 		}
 	}
@@ -101,7 +99,7 @@ public class AddFoodLog extends Activity {
 		@Override
 		public void invalidate() {
 			AccountManager am = AccountManager.get(AddFoodLog.this);
-			am.invalidateAuthToken(Main.APP_ENGINE, token); // dispose token
+			am.invalidateAuthToken(AsyncAuthToken.APP_ENGINE, token); // dispose token
 			token = null;
 			handler.post(new Runnable() {
 				@Override
@@ -114,6 +112,4 @@ public class AddFoodLog extends Activity {
 			});
 		}
 	}
-	
-
 }

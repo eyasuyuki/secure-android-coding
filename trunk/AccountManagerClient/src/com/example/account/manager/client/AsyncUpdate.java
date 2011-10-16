@@ -32,7 +32,6 @@ public class AsyncUpdate extends AsyncTask<Void, Void, Void> {
 
 	Context context = null;
 	DefaultHttpClient client = null;
-	String token = null;
 	ProgressDialog dialog = null;
 	String content = null;
 	JSONArray array = null;
@@ -41,12 +40,10 @@ public class AsyncUpdate extends AsyncTask<Void, Void, Void> {
 	
 	public AsyncUpdate(Context context,
 			DefaultHttpClient client,
-			String token,
 			ListView view,
 			ProgressDialog dialog) {
 		this.context = context;
 		this.client = client;
-		this.token = token;
 		this.view = view;
 		this.dialog = dialog;
 	}
