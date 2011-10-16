@@ -41,8 +41,7 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
 			String time,
 			String food,
 			String kcal,
-			String salt,
-			ProgressDialog dialog) {
+			String salt) {
 		this.context = context;
 		this.client = client;
 		this.logDate = logDate;
@@ -50,11 +49,11 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
 		this.food = food;
 		this.kcal = kcal;
 		this.salt = salt;
-		this.dialog = dialog;
 	}
 	
 	@Override
 	protected void onPreExecute() {
+		dialog = new ProgressDialog(context);
         dialog.setTitle(R.string.post_title);
         try { dialog.show(); } catch (Exception e) {}
 	}

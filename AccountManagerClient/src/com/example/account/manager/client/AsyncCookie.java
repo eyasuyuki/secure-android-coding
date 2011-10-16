@@ -36,12 +36,10 @@ public class AsyncCookie extends AsyncTask<String, Void, Void> {
 	boolean isValidCookie = false;
 	
 	public AsyncCookie(Context context,
-			ProgressDialog dialog,
 			DefaultHttpClient client,
 			TokenListener listener,
 			AsyncTask<Void, Void, Void> next) {
 		this.context = context;
-		this.dialog = dialog;
 		this.client = client;
 		this.listener = listener;
 		this.next = next;
@@ -49,7 +47,8 @@ public class AsyncCookie extends AsyncTask<String, Void, Void> {
 	
 	@Override
 	protected void onPreExecute() {
-        dialog.setTitle(R.string.progress_title);
+		dialog = new ProgressDialog(context);
+        dialog.setTitle(R.string.cookie_title);
 	    try { dialog.show();} catch (Exception e) {}
 	}
 
@@ -87,8 +86,7 @@ public class AsyncCookie extends AsyncTask<String, Void, Void> {
 	protected void onPostExecute(Void result) {
 		if (isValidCookie && next != null) {
 			next.execute();
-		} else {
-	        try { dialog.dismiss(); } catch (Exception e) {}
 		}
+        try { dialog.dismiss(); } catch (Exception e) {}
 	}
 }
