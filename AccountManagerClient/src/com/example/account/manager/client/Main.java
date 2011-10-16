@@ -151,17 +151,16 @@ public class Main extends ListActivity {
     
     void asyncUpdate(String authToken) {
         client = new DefaultHttpClient();
-        AsyncUpdate update = new AsyncUpdate(this, client, getListView());
-        AsyncCookie async = new AsyncCookie(this, client,
-                new InvalidateTokenListener(), update);
+        AsyncUpdate update =
+            new AsyncUpdate(this, client, getListView());
+        AsyncCookie async =
+            new AsyncCookie(
+                    this,
+                    client,
+                    new InvalidateTokenListener(),
+                    update);
         async.execute(authToken);
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        asyncAuthToken();
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
