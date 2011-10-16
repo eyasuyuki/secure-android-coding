@@ -167,6 +167,12 @@ public class Main extends ListActivity {
     }
     
 	@Override
+	protected void onResume() {
+		super.onResume();
+		asyncAuthToken();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = this.getMenuInflater();
