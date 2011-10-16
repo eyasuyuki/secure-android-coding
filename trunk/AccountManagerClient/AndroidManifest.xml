@@ -20,15 +20,15 @@
 			android:readPermission="com.example.account.manager.client.permission.READ_FOOD_LOG"
 			android:writePermission="com.example.account.manager.client.permission.WRITE_FOOD_LOG" android:exported="false"/>
         <activity android:name=".Main"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 		<activity android:name=".SelectAccount"
-			android:theme="@android:style/Theme.Dialog"
-			/>
+			android:theme="@android:style/Theme.Dialog" />
 		<activity android:name=".AddFoodLog" />
     </application>
 </manifest>
