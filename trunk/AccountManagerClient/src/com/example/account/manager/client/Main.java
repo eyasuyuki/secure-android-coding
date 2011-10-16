@@ -30,6 +30,7 @@ public class Main extends ListActivity {
 
     public static final int ACCOUNT_SELECTED = 1;
     public static final int GRANT_AUTH_TOKEN = 2;
+    public static final int ADD_FOOD_LOG = 3;
     public static final String ACCOUNT_TYPE = "com.google";
     Handler handler = new Handler();
     DefaultHttpClient client = null;;
@@ -147,12 +148,20 @@ public class Main extends ListActivity {
                 new NutrimancerCallback(), cookie);
         async.execute();
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        asyncAuthToken();
+    
+    void asyncUpdate(String authToken) {
+        client = new DefaultHttpClient();
+        AsyncUpdate update = new AsyncUpdate(this, client, getListView());
+        AsyncCookie async = new AsyncCookie(this, client,
+                new InvalidateTokenListener(), update);
+        async.execute(authToken);
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        asyncAuthToken();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,11 +174,18 @@ public class Main extends ListActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+        case R.id.menu_update:
+            if (authToken == null) {
+                asyncAuthToken();
+            } else {
+                asyncUpdate(authToken);
+            }
+            break;
         case R.id.menu_add_food_log:
             Intent intent = new Intent();
             intent.setClass(this, AddFoodLog.class);
             intent.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
-            startActivity(intent);
+            startActivityForResult(intent, ADD_FOOD_LOG);
             break;
         case R.id.menu_select_account:
             startSelectAccount();
@@ -191,10 +207,23 @@ public class Main extends ListActivity {
                 asyncAuthToken();
             }
         case GRANT_AUTH_TOKEN:
-            if (resultCode == RESULT_OK && authToken == null) {
-                asyncAuthToken();
-                Log.d(TAG, "onActivityResult: GRAND_AUTH_TOKEN: authToken="
-                        + authToken);
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "onActivityResult: GRAND_AUTH_TOKEN: authToken="+ authToken);
+                if (authToken == null) {
+                    asyncAuthToken();
+                } else {
+                    asyncUpdate(authToken);
+                }
+            }
+            break;
+        case ADD_FOOD_LOG:
+            if (resultCode == RESULT_OK) {
+                if (authToken == null) {
+                    asyncAuthToken();
+                } else {
+                    asyncUpdate(authToken);
+                }
+                Log.d(TAG, "onActivityResult: ADD_FOOD_LOG: authToken="+ authToken);
             }
             break;
         }
