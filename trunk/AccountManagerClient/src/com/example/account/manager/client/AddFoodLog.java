@@ -88,7 +88,8 @@ public class AddFoodLog extends Activity {
 							new InvalidateTokenListener(),
 							post);
 				cookie.execute(token);
-				AddFoodLog.this.finish();
+				setResult(RESULT_OK);
+				finish();
 			}
 		}
 	}
