@@ -28,7 +28,8 @@
             </intent-filter>
         </activity>
 		<activity android:name=".SelectAccount"
-			android:theme="@android:style/Theme.Dialog" />
-		<activity android:name=".AddFoodLog" />
+			android:theme="@android:style/Theme.Dialog"
+			android:screenOrientation="nosensor" />
+		<activity android:name=".AddFoodLog" android:screenOrientation="nosensor" />
     </application>
 </manifest>
