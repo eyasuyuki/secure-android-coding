@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/menu_update"
 		android:title="@string/menu_update_label"
-		android:icon="@android:drawable/ic_menu_rotate" />
+		android:icon="@drawable/ic_menu_refresh" />
     <item android:id="@+id/menu_add_food_log"
     	android:title="@string/menu_add_food_log_label"
     	android:icon="@android:drawable/ic_menu_add" />
