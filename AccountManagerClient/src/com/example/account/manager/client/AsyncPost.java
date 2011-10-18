@@ -15,8 +15,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -26,23 +26,24 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
 	private static final String TAG = AsyncPost.class.getName();
 
 	ProgressDialog dialog = null;
-	Context context = null;
+	Activity activity = null;
 	DefaultHttpClient client = null;
 	String logDate = null;
 	String time = null;
 	String food = null;
 	String kcal = null;
 	String salt = null;
+	boolean success = false;
 
 	public AsyncPost(
-			Context context,
+			Activity activity,
 			DefaultHttpClient client,
 			String logDate,
 			String time,
 			String food,
 			String kcal,
 			String salt) {
-		this.context = context;
+		this.activity = activity;
 		this.client = client;
 		this.logDate = logDate;
 		this.time = time;
@@ -53,14 +54,14 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPreExecute() {
-		dialog = new ProgressDialog(context);
+		dialog = new ProgressDialog(activity);
         dialog.setTitle(R.string.post_title);
         try { dialog.show(); } catch (Exception e) {}
 	}
 	
 	@Override
 	protected Void doInBackground(Void... params) {
-		URI uri = URI.create(context.getString(R.string.post_uri));
+		URI uri = URI.create(activity.getString(R.string.post_uri));
 		HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
 		HttpResponse response = null;
 		InputStream in = null;
@@ -83,22 +84,11 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
 					if (code == HttpStatus.SC_OK
 						|| code == HttpStatus.SC_CREATED
 						|| code == HttpStatus.SC_MOVED_TEMPORARILY) {
+                        success = true;
 						break;
 					}
 				}
 			}
-//			HttpEntity entity = response.getEntity();
-//			in = entity.getContent();
-//			StringBuffer buf = new StringBuffer();
-//			int c = -1;
-//			while ((c = in.read()) > -1) {
-//				buf.append((char)c);
-//			}
-//			String content = buf.toString();
-//			Log.d(TAG, "doInBackground: content="+content);
-//			if (content != null && content.length() > 0) {
-//				Log.d(TAG, "doInBackground: content="+content);
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -116,5 +106,9 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
         try { dialog.dismiss(); } catch (Exception e) {}
+        if (success) {
+            activity.setResult(Activity.RESULT_OK);
+            activity.finish();
+        }
 	}
 }
