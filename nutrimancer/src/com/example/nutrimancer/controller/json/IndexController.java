@@ -20,10 +20,10 @@ public class IndexController extends Controller {
         List<FoodLog> foodLogList = service.getFoodLogList();
         String json = FoodLogMeta.get().modelsToJson(foodLogList.toArray());
         
-        Writer writer = ResponseLocator.get().getWriter();
-        
         response.setContentType("application/json"); 
-        response.setCharacterEncoding("utf-8"); 
+        response.setCharacterEncoding("UTF-8"); 
+        
+        Writer writer = ResponseLocator.get().getWriter();
 
         writer.write(json);
         writer.close();
