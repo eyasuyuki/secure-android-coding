@@ -1,19 +1,23 @@
 package com.example.account.manager.client;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -58,10 +62,17 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
         dialog.setTitle(R.string.post_title);
         try { dialog.show(); } catch (Exception e) {}
 	}
-	
+	static String encode(String value) {  
+        try {  
+            return URLEncoder.encode(value, HTTP.UTF_8);  
+        } catch (UnsupportedEncodingException e) {  
+            e.printStackTrace();  
+            throw new RuntimeException(e);  
+        }  
+    }  	
 	@Override
 	protected Void doInBackground(Void... params) {
-		URI uri = URI.create(activity.getString(R.string.post_uri));
+	    URI uri = URI.create(activity.getString(R.string.post_uri));
 		HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
 		HttpResponse response = null;
 		InputStream in = null;
@@ -74,7 +85,7 @@ public class AsyncPost extends AsyncTask<Void, Void, Void> {
 		        pairs.add(new BasicNameValuePair(FoodLog.FOOD_KEY, food));
 		        pairs.add(new BasicNameValuePair(FoodLog.KCAL_KEY, kcal));
 		        pairs.add(new BasicNameValuePair(FoodLog.SALT_KEY, salt));
-		        post.setEntity(new UrlEncodedFormEntity(pairs));
+		        post.setEntity(new UrlEncodedFormEntity(pairs, HTTP.UTF_8));
 		        response = client.execute(host, post);
 				int code = HttpStatus.SC_UNAUTHORIZED;
 				StatusLine status = response.getStatusLine();
