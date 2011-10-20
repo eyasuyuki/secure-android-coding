@@ -35,6 +35,8 @@
     <string name="breakfast_label">Breakfast</string>
     <string name="lunch_label">Lunch</string>
     <string name="dinner_label">Dinner</string>
+    <string name="kcal_default">0</string>
+    <string name="salt_default">0</string>
     <!-- input activity -->
     <string name="food_label">Food:</string>
     <string name="post_button_label">Add Food Log</string>

@@ -37,6 +37,7 @@
 	    android:layout_height="wrap_content"
 	    android:inputType="numberDecimal"
 	    android:digits="0123456789"
+	    android:text="@string/kcal_default"
 	     />
 	<!-- salt -->
     <TextView android:text="@string/salt_label"
@@ -47,6 +48,7 @@
 	    android:layout_height="wrap_content"
 	    android:inputType="number"
 	    android:digits=".0123456789"
+	    android:text="@string/salt_default"
 	     />
 	<!-- post -->
 	<Button android:id="@+id/post_button"
