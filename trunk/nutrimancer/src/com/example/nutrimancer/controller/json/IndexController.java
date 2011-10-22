@@ -3,6 +3,7 @@ package com.example.nutrimancer.controller.json;
 import java.io.Writer;
 import java.util.List;
 
+import org.apache.commons.lang3.CharUtils;
 import org.slim3.controller.Controller;
 import org.slim3.controller.Navigation;
 import org.slim3.util.ResponseLocator;
@@ -25,9 +26,22 @@ public class IndexController extends Controller {
         
         Writer writer = ResponseLocator.get().getWriter();
 
-        writer.write(json);
+        writer.write(escape(json));
         writer.close();
         
         return null;
+    }
+
+    static String escape(String text) {
+        if (text == null || text.length() <= 0) return text;
+        StringBuffer buf = new StringBuffer();
+        for (int i=0; i<text.length(); i++) {
+            if (CharUtils.isAscii(text.charAt(i))) {
+                buf.append(text.charAt(i));
+            } else {
+                buf.append(CharUtils.unicodeEscaped(text.charAt(i)));
+            }
+        }
+        return buf.toString();
     }
 }
